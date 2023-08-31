@@ -10,16 +10,25 @@
         <tr>
             <th>ID</th>
             <th>Cycle Name</th>
+            <th>Action</th>
         </tr>
         
         <tr th:each="cycle : ${cycles}">
             <td th:text="${cycle.id}"></td>
             <td th:text="${cycle.cycleName}"></td>
+            <td>
+                <form th:action="@{/cycles/borrow}" method="post">
+                    <input type="hidden" name="cycleId" th:value="${cycle.id}" />
+                    <button type="submit">Borrow</button>
+                </form>
+            </td>
         </tr>
     </table>
 
-    <form>
-        
-    </form>
+    <td>
+        <form th:action="@{/cycles/borrowed}" method="get">
+            <button type="submit">Borrowed cycles list</button>
+        </form>
+    </td>
 </body>
 </html>

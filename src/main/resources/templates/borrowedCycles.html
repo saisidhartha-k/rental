@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Cycles List</title>
+</head>
+<body>
+    <table border="1">
+        <tr>
+            <th>borrowed cycle ID</th>
+            <th>Cycle Name</th>
+        </tr>
+        
+        <tr th:each="borrow : ${borrowed}">
+            <td th:text="${borrow.borrowedId}"></td>
+            <td th:text="${borrow.cycleName}"></td>
+            <td>
+                <form th:action="@{/cycles/return}" method="post">
+                    <input type="hidden" name="cycleId" th:value="${borrow.borrowedId}" />
+                    <button type="submit">return</button>
+                
+            </td>
+        </tr>
+    </table>
+    <a th:href="@{/cycles}" class="button">View avaliable Cycles</a>
+    
+
+</body>
+</html>
