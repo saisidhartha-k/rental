@@ -34,14 +34,13 @@ public class CyclesController {
         
         if (cycleOptional.isPresent()) {
         Cycles borrowedCycle = cycleOptional.get();
-        cyclesRepository.delete(borrowedCycle); // Remove from available cycles
+        cyclesRepository.delete(borrowedCycle); 
         
-        // Create a BorrowedCycles entity from the borrowed cycle
         BorrowedCycles borrowedEntity = new BorrowedCycles();
         borrowedEntity.setCycleName(borrowedCycle.getCycleName());
-        borrowedCyclesRepository.save(borrowedEntity); // Add to borrowed cycles
+        borrowedCyclesRepository.save(borrowedEntity); 
     }
-        return "redirect:/cycles/borrowed"; // Redirect back to the available cycles list
+        return "redirect:/cycles/borrowed"; 
     }
 
      @PostMapping("/cycles/return")
@@ -50,12 +49,11 @@ public class CyclesController {
         
         if (cycleOptional.isPresent()) {
         BorrowedCycles borrowedCycle = cycleOptional.get();
-        borrowedCyclesRepository.delete(borrowedCycle); // Remove from available cycles
+        borrowedCyclesRepository.delete(borrowedCycle);
         
-        // Create a BorrowedCycles entity from the borrowed cycle
         Cycles cycleEntity = new Cycles();
         cycleEntity.setCycleName(borrowedCycle.getCycleName());
-        cyclesRepository.save(cycleEntity); // Add to borrowed cycles
+        cyclesRepository.save(cycleEntity); 
     }
         return "redirect:/cycles"; 
     }

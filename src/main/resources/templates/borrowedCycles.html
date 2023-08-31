@@ -1,28 +1,77 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Cycles List</title>
+    <title>Borrowed Cycles List</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        
+        .card {
+            background-color: #fff;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            padding: 20px;
+            width: 80%;
+            max-width: 600px;
+            text-align: center;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+        
+        button, .button-link {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 16px;
+            cursor: pointer;
+        }
+        
+        button:hover, .button-link:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
-    <table border="1">
-        <tr>
-            <th>borrowed cycle ID</th>
-            <th>Cycle Name</th>
-        </tr>
-        
-        <tr th:each="borrow : ${borrowed}">
-            <td th:text="${borrow.borrowedId}"></td>
-            <td th:text="${borrow.cycleName}"></td>
-            <td>
-                <form th:action="@{/cycles/return}" method="post">
-                    <input type="hidden" name="cycleId" th:value="${borrow.borrowedId}" />
-                    <button type="submit">return</button>
-                
-            </td>
-        </tr>
-    </table>
-    <a th:href="@{/cycles}" class="button">View avaliable Cycles</a>
+    <div class="card">
+        <h1>Borrowed Cycles List</h1>
     
-
+        <table>
+            <tr>
+                <th>Borrowed Cycle ID</th>
+                <th>Cycle Name</th>
+                <th>Action</th>
+            </tr>
+            
+            <tr th:each="borrow : ${borrowed}">
+                <td th:text="${borrow.borrowedId}"></td>
+                <td th:text="${borrow.cycleName}"></td>
+                <td>
+                    <form th:action="@{/cycles/return}" method="post">
+                        <input type="hidden" name="cycleId" th:value="${borrow.borrowedId}" />
+                        <button type="submit">Return</button>
+                    </form>
+                </td>
+            </tr>
+        </table>
+        
+        <a th:href="@{/cycles}" class="button-link">View Available Cycles</a>
+    </div>
 </body>
 </html>
