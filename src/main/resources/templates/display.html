@@ -60,20 +60,31 @@
             </tr>
             
             <tr th:each="cycle : ${cycles}">
-                <td th:text="${cycle.id}"></td>
+                <td th:text="${cycle.cycleId}"></td>
                 <td th:text="${cycle.cycleName}"></td>
                 <td>
                     <form th:action="@{/cycles/borrow}" method="post">
-                        <input type="hidden" name="cycleId" th:value="${cycle.id}" />
+                        <input type="hidden" name="cycleId" th:value="${cycle.cycleId}" />
                         <button type="submit">Borrow</button>
                     </form>
                 </td>
             </tr>
         </table>
-        
         <form th:action="@{/cycles/borrowed}" method="get">
             <button type="submit">view Borrowed Cycles</button>
         </form>
+        <div>
+            <h2>Add New Cycle</h2>
+            <form action="/cycles/add" method="post">
+                <label for="cycleId">Cycle id</label>
+                <input type="number" id="cycleId" name="cycleId" required>
+                <label for="cycleName">Cycle Name:</label>
+                <input type="text" id="cycleName" name="cycleName" required>
+                <button type="submit">Add Cycle</button>
+            </form>
+        </div>
+        
+       
     </div>
 </body>
 </html>

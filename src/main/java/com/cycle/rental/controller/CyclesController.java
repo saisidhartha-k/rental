@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -37,6 +38,7 @@ public class CyclesController {
         cyclesRepository.delete(borrowedCycle); 
         
         BorrowedCycles borrowedEntity = new BorrowedCycles();
+        borrowedEntity.setBorrowedCycleId(borrowedCycle.getCycleId());
         borrowedEntity.setCycleName(borrowedCycle.getCycleName());
         borrowedCyclesRepository.save(borrowedEntity); 
     }
@@ -52,11 +54,24 @@ public class CyclesController {
         borrowedCyclesRepository.delete(borrowedCycle);
         
         Cycles cycleEntity = new Cycles();
+        cycleEntity.setCycleId(borrowedCycle.getBorrowedCycleId());
         cycleEntity.setCycleName(borrowedCycle.getCycleName());
         cyclesRepository.save(cycleEntity); 
     }
         return "redirect:/cycles"; 
     }
+
+    @PostMapping("/cycles/add")
+    public String addCycle(@RequestParam String cycleName, @RequestParam int cycleId) {
+        Cycles newCycle = new Cycles();
+        newCycle.setCycleId(cycleId);
+        newCycle.setCycleName(cycleName);
+        cyclesRepository.save(newCycle);
+        
+        return "redirect:/cycles";
+    }
+
+
 
     @GetMapping("/cycles/borrowed")
     public String getBorrowedList(Model model) {

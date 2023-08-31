@@ -11,8 +11,7 @@ import lombok.Data;
 public class BorrowedCycles {
     
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private int borrowedId;
+    private int borrowedCycleId;
     
     private String cycleName;
 

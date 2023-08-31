@@ -13,8 +13,7 @@ import lombok.Data;
 public class Cycles {
   
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private int id;
+    private int cycleId;
     
     private String cycleName;
   
