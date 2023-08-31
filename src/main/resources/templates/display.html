@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Cycles List</title>
+</head>
+<body>
+    <h1>Cycles List</h1>
+    
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>Cycle Name</th>
+        </tr>
+        
+        <tr th:each="cycle : ${cycles}">
+            <td th:text="${cycle.id}"></td>
+            <td th:text="${cycle.cycleName}"></td>
+        </tr>
+    </table>
+
+    <form>
+        
+    </form>
+</body>
+</html>
