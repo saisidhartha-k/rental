@@ -6,5 +6,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BorrowedCyclesRepository extends JpaRepository<BorrowedCycles, Integer> {
-    // You can add custom query methods here if needed
 }
