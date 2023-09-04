@@ -65,7 +65,7 @@
                 <td th:text="${cycle.cycleName}"></td>
                 <td th:text="${cycle.stock}"></td>
                 <td>
-                    <form th:action="@{/cycles/borrow}" method="post">
+                    <form th:action="@{/cycles/borrow/{cycleId}}" method="post">
                         <input type="hidden" name="cycleId" th:value="${cycle.cycleId}" />
                         <button type="submit">Borrow</button>
                     </form>

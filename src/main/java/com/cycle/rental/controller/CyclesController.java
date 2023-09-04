@@ -32,7 +32,7 @@ public class CyclesController {
         return "display";
     }
 
-    @PostMapping("/cycles/borrow")
+    @PostMapping("/cycles/borrow/{id}")
     public String borrowCycle(@RequestParam int cycleId) {
         Optional<Cycles> cycleOptional = cyclesRepository.findById(cycleId);
         
