@@ -114,5 +114,18 @@ public class CyclesController {
         return "borrowedCycles";
     }
 
+    @PostMapping("/cycles/addStock")
+    public String addStock(@RequestParam int cycleId)
+    {
+        Optional<Cycles> cycleOptional = cyclesRepository.findById(cycleId);
+        
+        Cycles cycle = cycleOptional.get();
+        cycle.setStock(cycle.getStock() + 1);
+        cyclesRepository.save(cycle);
+
+        return "redirect:/cycles/restock";
+
+    }
+
   
 }
