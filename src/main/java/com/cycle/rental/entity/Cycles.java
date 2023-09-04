@@ -15,6 +15,7 @@ public class Cycles {
     @Id
     private int cycleId;
     
+    private int stock;
     private String cycleName;
   
 

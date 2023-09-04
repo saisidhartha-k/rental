@@ -56,12 +56,14 @@
             <tr>
                 <th>ID</th>
                 <th>Cycle Name</th>
+                <th>stock</th>
                 <th>Action</th>
             </tr>
             
             <tr th:each="cycle : ${cycles}">
                 <td th:text="${cycle.cycleId}"></td>
                 <td th:text="${cycle.cycleName}"></td>
+                <td th:text="${cycle.stock}"></td>
                 <td>
                     <form th:action="@{/cycles/borrow}" method="post">
                         <input type="hidden" name="cycleId" th:value="${cycle.cycleId}" />
@@ -73,7 +75,11 @@
         <form th:action="@{/cycles/borrowed}" method="get">
             <button type="submit">view Borrowed Cycles</button>
         </form>
-        <div>
+
+        <form th:action="@{cycles/restock}" method="get">
+            <button type="submit">view Cycles Stock</button>
+        </form>
+        <!-- <div>
             <h2>Add New Cycle</h2>
             <form action="/cycles/add" method="post">
                 <label for="cycleId">Cycle id</label>
@@ -82,7 +88,7 @@
                 <input type="text" id="cycleName" name="cycleName" required>
                 <button type="submit">Add Cycle</button>
             </form>
-        </div>
+        </div> -->
         
        
     </div>

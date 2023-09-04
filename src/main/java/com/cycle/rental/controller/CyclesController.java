@@ -13,6 +13,7 @@ import com.cycle.rental.entity.BorrowedCycles;
 import com.cycle.rental.entity.Cycles;
 import com.cycle.rental.repository.BorrowedCyclesRepository;
 import com.cycle.rental.repository.CyclesRepository;
+import com.cycle.rental.repository.CyclesStockRepository;
 
 @Controller
 public class CyclesController {
@@ -22,6 +23,8 @@ public class CyclesController {
 
     @Autowired
     private BorrowedCyclesRepository borrowedCyclesRepository;
+
+
 
     @GetMapping("/cycles")
     public String getCyclesList(Model model) {
@@ -33,49 +36,83 @@ public class CyclesController {
     public String borrowCycle(@RequestParam int cycleId) {
         Optional<Cycles> cycleOptional = cyclesRepository.findById(cycleId);
         
+   
         if (cycleOptional.isPresent()) {
         Cycles borrowedCycle = cycleOptional.get();
-        cyclesRepository.delete(borrowedCycle); 
-        
-        BorrowedCycles borrowedEntity = new BorrowedCycles();
-        borrowedEntity.setBorrowedCycleId(borrowedCycle.getCycleId());
-        borrowedEntity.setCycleName(borrowedCycle.getCycleName());
-        borrowedCyclesRepository.save(borrowedEntity); 
+
+        if(borrowedCycle.getStock() != 0)
+        {
+            borrowedCycle.setStock(borrowedCycle.getStock() - 1);     
+        }
+        Optional<BorrowedCycles> borrwedOptional = borrowedCyclesRepository.findById(cycleId);
+
+            if(borrwedOptional.isPresent())
+            {
+                BorrowedCycles borrowedCycleEntity = borrwedOptional.get();
+                borrowedCycleEntity.setStock(borrowedCycleEntity.getStock() + 1);
+                borrowedCyclesRepository.save(borrowedCycleEntity);
+
+            }
+            else{
+            BorrowedCycles borrowedEntity = new BorrowedCycles();
+            borrowedEntity.setBorrowedCycleId(borrowedCycle.getCycleId());
+            borrowedEntity.setCycleName(borrowedCycle.getCycleName());
+            borrowedEntity.setStock(borrowedEntity.getStock() + 1);
+            borrowedCyclesRepository.save(borrowedEntity); 
+            }
     }
         return "redirect:/cycles/borrowed"; 
     }
 
-     @PostMapping("/cycles/return")
+    @PostMapping("/cycles/return")
     public String returnCycle(@RequestParam int cycleId) {
         Optional<BorrowedCycles> cycleOptional = borrowedCyclesRepository.findById(cycleId);
-        
+    
         if (cycleOptional.isPresent()) {
-        BorrowedCycles borrowedCycle = cycleOptional.get();
-        borrowedCyclesRepository.delete(borrowedCycle);
-        
-        Cycles cycleEntity = new Cycles();
-        cycleEntity.setCycleId(borrowedCycle.getBorrowedCycleId());
-        cycleEntity.setCycleName(borrowedCycle.getCycleName());
-        cyclesRepository.save(cycleEntity); 
+            BorrowedCycles borrowedCycle = cycleOptional.get();
+    
+            if (borrowedCycle.getStock() != 0) {
+                borrowedCycle.setStock(borrowedCycle.getStock() - 1);
+    
+                if (borrowedCycle.getStock() == 0) {
+                    borrowedCyclesRepository.delete(borrowedCycle);
+                }
+    
+                Optional<Cycles> returnedCycleOptional = cyclesRepository.findById(borrowedCycle.getBorrowedCycleId());
+    
+                if (returnedCycleOptional.isPresent()) {
+                    Cycles returnedCycleEntity = returnedCycleOptional.get();
+                    returnedCycleEntity.setStock(returnedCycleEntity.getStock() + 1);
+                    cyclesRepository.save(returnedCycleEntity);
+                }
+            }
+        }
+        return "redirect:/cycles";
     }
-        return "redirect:/cycles"; 
-    }
+    
 
     @PostMapping("/cycles/add")
-    public String addCycle(@RequestParam String cycleName, @RequestParam int cycleId) {
+    public String addCycle(@RequestParam String cycleName, @RequestParam int cycleId, @RequestParam int cyclestock) {
         Cycles newCycle = new Cycles();
         newCycle.setCycleId(cycleId);
         newCycle.setCycleName(cycleName);
+        newCycle.setStock(cyclestock);
         cyclesRepository.save(newCycle);
         
         return "redirect:/cycles";
     }
 
-
+    @GetMapping("/cycles/restock")
+    public String CyclesStock(Model model) {
+        model.addAttribute("cycles", cyclesRepository.findAll());
+        return "restockCycles";
+    }
 
     @GetMapping("/cycles/borrowed")
     public String getBorrowedList(Model model) {
         model.addAttribute("borrowed", borrowedCyclesRepository.findAll());
         return "borrowedCycles";
     }
+
+  
 }
