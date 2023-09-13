@@ -1,6 +1,8 @@
 package com.cycle.rental.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Role;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.cycle.rental.entity.BorrowedCycles;
@@ -8,12 +10,13 @@ import com.cycle.rental.entity.Cycles;
 import com.cycle.rental.repository.BorrowedCyclesRepository;
 import com.cycle.rental.repository.CyclesRepository;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/cycles")
-public class CyclesController {
+public class CyclesController  {
 
     @Autowired
     private CyclesRepository cyclesRepository;
@@ -22,11 +25,16 @@ public class CyclesController {
     private BorrowedCyclesRepository borrowedCyclesRepository;
 
     @GetMapping
+    // @PreAuthorize("hasRole('ROLE_ADMIN')")
+      //  @Role("ADMIN")
+
     public Iterable<Cycles> getCyclesList() {
         return cyclesRepository.findAll();
     }
 
     @PostMapping("/borrow/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+
     public BorrowedCycles borrowCycle(@PathVariable int id) {
         Optional<Cycles> cycleOptional = cyclesRepository.findById(id);
 
