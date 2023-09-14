@@ -141,4 +141,9 @@ public class CyclesController  {
         return userRepository.save(newUser);
     }
 
+    @GetMapping("/Users")
+     public Iterable<User> showUsers() {
+        return userRepository.findAll();
+    }
+
 }
