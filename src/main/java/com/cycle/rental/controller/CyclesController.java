@@ -1,14 +1,24 @@
 package com.cycle.rental.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties.Authentication;
+import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties.Jwt;
 import org.springframework.context.annotation.Role;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import com.cycle.rental.entity.BorrowedCycles;
 import com.cycle.rental.entity.Cycles;
+import com.cycle.rental.entity.User;
 import com.cycle.rental.repository.BorrowedCyclesRepository;
 import com.cycle.rental.repository.CyclesRepository;
+import com.cycle.rental.repository.UserRepository;
+
+import jakarta.annotation.security.RolesAllowed;
 
 import java.security.Principal;
 import java.util.List;
@@ -24,16 +34,24 @@ public class CyclesController  {
     @Autowired
     private BorrowedCyclesRepository borrowedCyclesRepository;
 
-    @GetMapping
-    // @PreAuthorize("hasRole('ROLE_ADMIN')")
-      //  @Role("ADMIN")
+    @Autowired 
+    private UserRepository userRepository;
 
-    public Iterable<Cycles> getCyclesList() {
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @GetMapping
+     //@RolesAllowed("ROLE_ADMIN")
+      //  @Role("ADMIN")
+     // @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+
+    public Iterable<Cycles> getCyclesList(Principal principal,Authentication authentication) {
+        // Jwt jwt = (jwt) authentication.getprincipal();
         return cyclesRepository.findAll();
     }
 
     @PostMapping("/borrow/{id}")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 
     public BorrowedCycles borrowCycle(@PathVariable int id) {
         Optional<Cycles> cycleOptional = cyclesRepository.findById(id);
@@ -93,6 +111,8 @@ public class CyclesController  {
     }
 
     @GetMapping("/restock")
+       // @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+
     public Iterable<Cycles> getCyclesStock() {
         return cyclesRepository.findAll();
     }
@@ -110,7 +130,15 @@ public class CyclesController  {
     }
 
     @GetMapping("/borrowed")
+
     public List<BorrowedCycles> getBorrowedList() {
         return borrowedCyclesRepository.findAll();
     }
+
+    @PostMapping("/addUser")
+    public User addUser(@RequestBody User newUser)
+    {
+        return userRepository.save(newUser);
+    }
+
 }
